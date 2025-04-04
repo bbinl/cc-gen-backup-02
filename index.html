@@ -735,257 +735,184 @@
     Copied to clipboard!
   <c/div>
   <script>
-    // Load saved BINs from localStorage
-let savedBins = JSON.parse(localStorage.getItem('binHistory')) || [];
+    document.addEventListener("DOMContentLoaded", function () {
+    // Initialize month and year dropdowns (from original)
+    let monthDropdown = document.getElementById("month");
+    let yearDropdown = document.getElementById("year");
+
+    // Add months
+    for (let i = 1; i <= 12; i++) {
+        let option = document.createElement("option");
+        option.value = i.toString().padStart(2, '0');
+        option.textContent = i.toString().padStart(2, '0');
+        monthDropdown.appendChild(option);
+    }
+
+    // Add years (updated range from original)
+    for (let i = 2026; i <= 2050; i++) {
+        let option = document.createElement("option");
+        option.value = i;
+        option.textContent = i;
+        yearDropdown.appendChild(option);
+    }
+
+    // Initialize BIN history system (from enhanced version)
+    savedBins = JSON.parse(localStorage.getItem('binHistory')) || [];
+    updateBinHistoryDropdown();
+});
+
+// BIN History System (from enhanced version) =============
+let savedBins = [];
 const binInput = document.getElementById('bin');
 const binHistory = document.getElementById('binHistory');
 
 function showCopyNotification() {
-  const notification = document.getElementById("copyNotification");
-  notification.style.display = "block";
-  setTimeout(() => {
-    notification.style.display = "none";
-  }, 2000);
+    const notification = document.getElementById("copyNotification");
+    notification.style.display = "block";
+    setTimeout(() => {
+        notification.style.display = "none";
+    }, 2000);
 }
 
-function copyOutput() {
-  let outputField = document.getElementById("output");
-  outputField.select();
-  document.execCommand("copy");
-  showCopyNotification();
-}
-
-// Toggle dropdown for mobile BIN cards
 function toggleDropdown(header) {
-  const card = header.parentElement;
-  const details = card.querySelector('.bin-dropdown-details');
-  const arrow = card.querySelector('.bin-dropdown-arrow');
-  
-  details.classList.toggle('show');
-  arrow.classList.toggle('down');
+    const card = header.parentElement;
+    const details = card.querySelector('.bin-dropdown-details');
+    const arrow = card.querySelector('.bin-dropdown-arrow');
+    
+    details.classList.toggle('show');
+    arrow.classList.toggle('down');
 }
 
-// Save BIN to history
 function saveBinToHistory(bin) {
-  if (!bin || bin.length < 6) return;
-  
-  // Remove if already exists
-  savedBins = savedBins.filter(b => b !== bin);
-  
-  // Add to end of array (will appear at bottom)
-  savedBins.push(bin);
-  
-  // Keep only last 5 entries
-  if (savedBins.length > 5) {
-    savedBins = savedBins.slice(-5);
-  }
-  
-  // Save to localStorage
-  localStorage.setItem('binHistory', JSON.stringify(savedBins));
-  
-  // Update dropdown
-  updateBinHistoryDropdown();
+    if (!bin || bin.length < 6) return;
+    
+    savedBins = savedBins.filter(b => b !== bin);
+    savedBins.push(bin);
+    
+    if (savedBins.length > 5) {
+        savedBins = savedBins.slice(-5);
+    }
+    
+    localStorage.setItem('binHistory', JSON.stringify(savedBins));
+    updateBinHistoryDropdown();
 }
 
-// Update the BIN history dropdown
 function updateBinHistoryDropdown() {
-  binHistory.innerHTML = '';
-  
-  if (savedBins.length === 0) return;
-  
-  // Display in order (oldest at top, newest at bottom)
-  savedBins.forEach(bin => {
-    const item = document.createElement('div');
-    item.className = 'bin-history-item';
-    item.textContent = bin;
-    item.addEventListener('mousedown', (e) => {
-      e.preventDefault();
-      binInput.value = bin;
-      binHistory.style.display = 'none';
-      binInput.focus();
+    binHistory.innerHTML = '';
+    
+    if (savedBins.length === 0) return;
+    
+    savedBins.forEach(bin => {
+        const item = document.createElement('div');
+        item.className = 'bin-history-item';
+        item.textContent = bin;
+        item.addEventListener('mousedown', (e) => {
+            e.preventDefault();
+            binInput.value = bin;
+            binHistory.style.display = 'none';
+            binInput.focus();
+        });
+        binHistory.appendChild(item);
     });
-    binHistory.appendChild(item);
-  });
 }
 
-// Save BIN when user explicitly enters one
+// Event listeners for BIN input (from enhanced version)
 binInput.addEventListener('change', () => {
-  const bin = binInput.value.trim();
-  if (bin.length >= 6) {
-    saveBinToHistory(bin);
-  }
+    const bin = binInput.value.trim();
+    if (bin.length >= 6) {
+        saveBinToHistory(bin);
+    }
 });
 
-// Show suggestions when input is focused or cleared
 binInput.addEventListener('focus', () => {
-  if (savedBins.length > 0) {
-    updateBinHistoryDropdown();
-    binHistory.style.display = 'block';
-  }
+    if (savedBins.length > 0) {
+        updateBinHistoryDropdown();
+        binHistory.style.display = 'block';
+    }
 });
 
 binInput.addEventListener('input', () => {
-  if (binInput.value === '' && savedBins.length > 0) {
-    updateBinHistoryDropdown();
-    binHistory.style.display = 'block';
-  }
+    if (binInput.value === '' && savedBins.length > 0) {
+        updateBinHistoryDropdown();
+        binHistory.style.display = 'block';
+    }
 });
 
 binInput.addEventListener('blur', () => {
-  setTimeout(() => {
-    binHistory.style.display = 'none';
-  }, 200);
+    setTimeout(() => {
+        binHistory.style.display = 'none';
+    }, 200);
 });
 
-// Generate a random BIN with 80% chance for Visa/Mastercard
-function getRandomBin() {
-  const rand = Math.random();
-  
-  if (rand < 0.8) {
-    // Mastercard (80% chance, starts with 51-55, 16 digits)
-    const prefix = Math.floor(51 + Math.random() * 5); // 51 to 55
-    const body = Math.floor(100000000000000 + Math.random() * 900000000000000); // 14 digits
-    return prefix.toString() + body.toString();
-  } else if (rand < 0.95) {
-    // Visa (15% chance, starts with 4, 16 digits)
-    return '4' + Math.floor(1000000000000000 + Math.random() * 900000000000000).toString();
-  } else {
-    // Amex (5% chance, starts with 34 or 37, 15 digits)
-    const prefix = Math.random() > 0.5 ? '34' : '37';
-    const body = Math.floor(100000000000000 + Math.random() * 90000000000000); // 13 digits
-    return prefix + body.toString();
-  }
-}
-
-// Clean and complete the BIN (handles 'x' characters)
-function completeBin(bin) {
-  // Remove any non-digit characters (like 'x')
-  let cleanBin = bin.replace(/\D/g, '');
-  
-  // If cleanBin is empty after removing non-digits, generate random
-  if (cleanBin.length === 0) {
-    cleanBin = getRandomBin();
-  }
-  
-  const cardLength = cleanBin.startsWith('34') || cleanBin.startsWith('37') ? 15 : 16;
-  
-  // Pad with random digits if needed
-  while (cleanBin.length < cardLength) {
-    cleanBin += Math.floor(Math.random() * 10);
-  }
-  
-  // Trim to required length
-  cleanBin = cleanBin.substring(0, cardLength);
-  
-  return cleanBin;
-}
-
-// Luhn validation check
+// ORIGINAL CARD GENERATION FUNCTIONS ====================
 function luhnCheck(num) {
-  let arr = (num + '')
-    .split('')
-    .reverse()
-    .map(x => parseInt(x));
-  let lastDigit = arr.splice(0, 1)[0];
-  let sum = arr.reduce((acc, val, i) => (i % 2 !== 0 ? acc + val : acc + ((val * 2) % 9) || 9), 0);
-  sum += lastDigit;
-  return sum % 10 === 0;
+    let arr = (num + '')
+        .split('')
+        .reverse()
+        .map(x => parseInt(x));
+    let lastDigit = arr.splice(0, 1)[0];
+    let sum = arr.reduce((acc, val, i) => (i % 2 !== 0 ? acc + val : acc + ((val * 2) % 9) || 9), 0);
+    sum += lastDigit;
+    return sum % 10 === 0;
 }
 
-// Generate valid Luhn number from BIN (handles 'x' characters)
 function generateLuhnNumber(bin) {
-  // First clean the BIN (remove non-digits)
-  let cleanBin = bin.replace(/\D/g, '');
-  const isAmex = cleanBin.startsWith('34') || cleanBin.startsWith('37');
-  const cardLength = isAmex ? 15 : 16;
-  
-  // If cleanBin is too short, pad it with random digits
-  while (cleanBin.length < cardLength - 1) {
-    cleanBin += Math.floor(Math.random() * 10);
-  }
-  
-  // Ensure we don't exceed the card length
-  cleanBin = cleanBin.substring(0, cardLength - 1);
-  
-  let checkDigit = 0;
-  while (true) {
-    let fullCardNumber = cleanBin + checkDigit;
-    if (luhnCheck(fullCardNumber)) {
-      return fullCardNumber;
+    let cardNumber = bin;
+    while (cardNumber.length < 15) {
+        cardNumber += Math.floor(Math.random() * 10);
     }
-    checkDigit++;
-    if (checkDigit > 9) {
-      // If we can't find a valid check digit, regenerate the last digit
-      cleanBin = cleanBin.slice(0, -1) + Math.floor(Math.random() * 10);
-      checkDigit = 0;
+
+    let checkDigit = 0;
+    while (true) {
+        let fullCardNumber = cardNumber + checkDigit;
+        if (luhnCheck(fullCardNumber)) {
+            return fullCardNumber;
+        }
+        checkDigit++;
     }
-  }
 }
 
-// Generate cards
 function generateCards() {
-  let bin = binInput.value.trim();
-  let quantity = parseInt(document.getElementById("quantity").value) || 10;
-  let ccv = document.getElementById("ccv").value;
-  let result = "";
+    let bin = document.getElementById("bin").value.replace(/x/gi, '').slice(0, 16);
+    let quantity = parseInt(document.getElementById("quantity").value) || 10;
+    let ccv = document.getElementById("ccv").value;
+    let result = "";
 
-  for (let i = 0; i < quantity; i++) {
-    let cardNumber;
-    if (bin) {
-      // If BIN is provided, generate based on it (handling 'x' characters)
-      cardNumber = generateLuhnNumber(bin);
-    } else {
-      // If no BIN provided, generate completely random
-      cardNumber = generateLuhnNumber(getRandomBin());
+    for (let i = 0; i < quantity; i++) {
+        let cardNumber = generateLuhnNumber(bin);
+        let ccvValue = ccv === "" ? Math.floor(100 + Math.random() * 900) : ccv;
+        let expiryMonth = document.getElementById("month").value === "Random" ? 
+            String(Math.floor(Math.random() * 12) + 1).padStart(2, '0') : 
+            document.getElementById("month").value;
+        let expiryYear = document.getElementById("year").value === "Random" ? 
+            String(Math.floor(Math.random() * 25) + 2026) : 
+            document.getElementById("year").value;
+
+        result += `${cardNumber}|${expiryMonth}|${expiryYear}|${ccvValue}\n`;
     }
-    
-    let ccvValue = ccv === "" ? Math.floor(100 + Math.random() * 900) : ccv;
-    let expiryMonth = document.getElementById("month").value === "Random" ? 
-      String(Math.floor(Math.random() * 12) + 1).padStart(2, '0') : 
-      document.getElementById("month").value;
-    let expiryYear = document.getElementById("year").value === "Random" ? 
-      String(Math.floor(Math.random() * 25) + 2025) : 
-      document.getElementById("year").value;
 
-    result += `${cardNumber}|${expiryMonth}|${expiryYear}|${ccvValue}\n`;
-  }
-
-  document.getElementById("output").value = result;
+    document.getElementById("output").value = result;
 }
 
-// Initialize month and year dropdowns
-document.addEventListener("DOMContentLoaded", function () {
-  let monthDropdown = document.getElementById("month");
-  let yearDropdown = document.getElementById("year");
+// ENHANCED COPY FUNCTION (from enhanced version)
+function copyOutput() {
+    let outputField = document.getElementById("output");
+    outputField.select();
+    document.execCommand("copy");
+    showCopyNotification(); // Uses the enhanced notification
+}
 
-  // Add months
-  for (let i = 1; i <= 12; i++) {
-    let option = document.createElement("option");
-    option.value = i.toString().padStart(2, '0');
-    option.textContent = i.toString().padStart(2, '0');
-    monthDropdown.appendChild(option);
-  }
-
-  // Add years
-  for (let i = 2025; i <= 2050; i++) {
-    let option = document.createElement("option");
-    option.value = i;
-    option.textContent = i;
-    yearDropdown.appendChild(option);
-  }
-  
-  // Add click to copy functionality for BIN examples
-  document.querySelectorAll('.bin-item code, .bin-detail code, .bin-dropdown-value').forEach(code => {
+// Initialize click-to-copy for BIN examples (from enhanced version)
+document.querySelectorAll('.bin-item code, .bin-detail code, .bin-dropdown-value').forEach(code => {
     code.addEventListener('click', function() {
-      navigator.clipboard.writeText(this.textContent)
-        .then(() => {
-          showCopyNotification();
-        })
-        .catch(err => {
-          console.error('Failed to copy: ', err);
-        });
+        navigator.clipboard.writeText(this.textContent)
+            .then(() => {
+                showCopyNotification();
+            })
+            .catch(err => {
+                console.error('Failed to copy: ', err);
+            });
     });
-  });
 });
   </script>
 </body>
