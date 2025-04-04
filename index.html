@@ -1,0 +1,745 @@
+ <!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BBNL CC Gen - Dark Mode</title>
+  <style>
+    :root {
+      --primary: #3498db;
+      --primary-dark: #2980b9;
+      --dark: #121212;
+      --darker: #0a0a0a;
+      --light: #1e1e1e;
+      --lighter: #2d2d2d;
+      --text: #e0e0e0;
+      --text-muted: #b0b0b0;
+      --border: #333;
+      --shadow: rgba(0, 0, 0, 0.5);
+      --success: #2ecc71;
+      --button-gradient: linear-gradient(135deg, #ff8a00, #ffcc00);
+      --button-hover: #3498db;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      background-color: var(--darker);
+      color: var(--text);
+      line-height: 1.6;
+      padding: 20px;
+      min-height: 100vh;
+    }
+
+    .page-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      background-color: var(--dark);
+      border-radius: 10px;
+      box-shadow: 0 0 20px var(--shadow);
+      overflow: hidden;
+      border: 1px solid var(--border);
+    }
+
+    /* Header Styles */
+    .page-header {
+      background-color: var(--lighter);
+      color: var(--text);
+      padding: 10px 20px;
+      text-align: center;
+      position: relative;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .page-title {
+      font-size: clamp(1.5rem, 3vw, 2rem);
+      margin-bottom: 5px;
+      color: var(--primary);
+    }
+
+    /* Responsive BIN Section */
+    .bin-section {
+      padding: 10px 20px;
+      background-color: var(--light);
+      border-bottom: 1px solid var(--border);
+    }
+
+    /* Mobile BIN Examples (hidden on desktop) */
+    .bin-examples-mobile {
+      text-align: center;
+    }
+
+    .bin-examples-mobile .bin-examples {
+      display: inline-block;
+      text-align: left;
+      background-color: var(--lighter);
+      padding: 10px 15px;
+      border-radius: 8px;
+      box-shadow: 0 2px 5px var(--shadow);
+      margin: 5px auto;
+      border: 1px solid var(--border);
+    }
+
+    .bin-examples-mobile .bin-item {
+      margin: 5px 0;
+      font-size: 0.8rem;
+    }
+
+    .bin-examples-mobile .bin-item code {
+      background-color: var(--dark);
+      color: var(--primary);
+      padding: 2px 5px;
+      border-radius: 3px;
+      font-family: monospace;
+      cursor: pointer;
+      transition: all 0.2s;
+      border: 1px solid var(--border);
+      font-size: 0.8rem;
+    }
+
+    .bin-examples-mobile .bin-item code:hover {
+      background-color: var(--border);
+    }
+
+    /* Desktop BIN Cards (hidden on mobile) */
+    .bin-cards-desktop {
+      display: none;
+      gap: 15px;
+      justify-content: space-between;
+    }
+
+    .bin-card {
+      flex: 1;
+      background-color: var(--lighter);
+      padding: 10px;
+      border-radius: 8px;
+      box-shadow: 0 2px 5px var(--shadow);
+      border: 1px solid var(--border);
+    }
+
+    .bin-card-title {
+      font-weight: bold;
+      margin-bottom: 8px;
+      font-size: 0.9rem;
+      color: var(--primary);
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 3px;
+    }
+
+    .bin-detail {
+      margin: 5px 0;
+      font-size: 0.8rem;
+    }
+
+    .bin-detail code {
+      background-color: var(--dark);
+      color: var(--primary);
+      padding: 2px 4px;
+      border-radius: 3px;
+      font-family: monospace;
+      cursor: pointer;
+      transition: all 0.2s;
+      border: 1px solid var(--border);
+      font-size: 0.8rem;
+    }
+
+    .bin-detail code:hover {
+      background-color: var(--border);
+    }
+
+    /* CC Checker Button */
+    .cc-checker-container {
+      text-align: center;
+      padding: 10px;
+      background-color: var(--light);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .cc-checker-btn {
+      display: inline-block;
+      background: var(--button-gradient);
+      color: black;
+      padding: 8px 20px;
+      border-radius: 5px;
+      text-decoration: none;
+      font-weight: bold;
+      transition: all 0.3s;
+      border: none;
+      cursor: pointer;
+      font-size: 0.9rem;
+    }
+
+    .cc-checker-btn:hover {
+      background: var(--button-hover);
+      color: white;
+      transform: translateY(-2px);
+    }
+
+    /* Main Content Area */
+    .main-content {
+      display: flex;
+      flex-wrap: wrap;
+      padding: 15px;
+    }
+
+    .input-section, .output-section {
+      flex: 1;
+      min-width: 300px;
+      padding: 15px;
+    }
+
+    .input-section {
+      border-right: 1px solid var(--border);
+    }
+
+    .form-group {
+      margin-bottom: 15px;
+      position: relative;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: bold;
+      font-size: clamp(0.9rem, 1.5vw, 1rem);
+      color: var(--text);
+    }
+
+    input, select, textarea {
+      width: 100%;
+      padding: 10px;
+      background-color: var(--lighter);
+      color: var(--text);
+      border: 1px solid var(--border);
+      border-radius: 5px;
+      font-size: clamp(0.9rem, 1.5vw, 1rem);
+      transition: all 0.3s;
+    }
+
+    input:focus, select:focus, textarea:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+    }
+
+    .bin-input {
+      font-family: monospace;
+    }
+
+    .form-row {
+      display: flex;
+      gap: 15px;
+    }
+
+    .form-col {
+      flex: 1;
+    }
+
+    /* BIN History Drop-up */
+    .bin-history {
+      position: absolute;
+      bottom: 100%;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 80%;
+      max-height: 200px;
+      overflow-y: auto;
+      background-color: white;
+      border: 1px solid #ddd;
+      border-radius: 5px 5px 0 0;
+      z-index: 10;
+      display: none;
+      box-shadow: 0 -2px 5px rgba(0,0,0,0.1);
+    }
+
+    .bin-history-item {
+      padding: 8px 10px;
+      cursor: pointer;
+      font-family: monospace;
+      font-size: 0.9rem;
+      color: #333;
+      border-bottom: 1px solid #eee;
+    }
+
+    .bin-history-item:last-child {
+      border-bottom: none;
+    }
+
+    .bin-history-item:hover {
+      background-color: #f5f5f5;
+    }
+
+    /* Updated CVC/Quantity layout */
+    .cvc-quantity-group {
+      display: flex;
+      gap: 15px;
+      margin-bottom: 15px;
+    }
+
+    .cvc-quantity-item {
+      flex: 1;
+    }
+
+    .cvc-quantity-item label {
+      margin-bottom: 8px;
+      display: block;
+    }
+
+    /* Button Container */
+    .button-container {
+      display: flex;
+      gap: 10px;
+      margin-top: 15px;
+    }
+
+    button {
+      flex: 1;
+      background: var(--button-gradient);
+      color: black;
+      border: none;
+      padding: 10px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 0.9rem;
+      transition: all 0.3s;
+      font-weight: bold;
+    }
+
+    button:hover {
+      background: var(--button-hover);
+      color: white;
+    }
+
+    textarea {
+      height: 300px;
+      resize: vertical;
+      font-family: monospace;
+      background-color: var(--lighter);
+    }
+
+    /* Footer */
+    .page-footer {
+      text-align: center;
+      padding: 10px;
+      background-color: var(--lighter);
+      color: var(--text-muted);
+      font-size: clamp(0.7rem, 1.2vw, 0.8rem);
+      border-top: 1px solid var(--border);
+    }
+
+    .page-footer a {
+      color: var(--primary);
+      text-decoration: none;
+    }
+
+    .page-footer a:hover {
+      text-decoration: underline;
+    }
+
+    /* Responsive Adjustments */
+    @media (max-width: 768px) {
+      .input-section {
+        border-right: none;
+        border-bottom: 1px solid var(--border);
+      }
+
+      .main-content {
+        flex-direction: column;
+      }
+
+      .form-row, .cvc-quantity-group {
+        flex-direction: column;
+        gap: 0;
+      }
+
+      .form-col, .cvc-quantity-item {
+        margin-bottom: 15px;
+      }
+      
+      .bin-history {
+        width: 90%; /* Slightly wider on mobile */
+      }
+    }
+
+    @media (min-width: 769px) {
+      .bin-examples-mobile {
+        display: none;
+      }
+
+      .bin-cards-desktop {
+        display: flex;
+      }
+    }
+
+    /* Animation for copy feedback */
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .copy-notification {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background-color: var(--success);
+      color: white;
+      padding: 10px 20px;
+      border-radius: 5px;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+      animation: fadeIn 0.3s ease-out;
+      z-index: 1000;
+      display: none;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="page-container">
+    <!-- Page Header -->
+    <header class="page-header">
+      <h1 class="page-title">BBNL CC Gen</h1>
+    </header>
+
+    <!-- BIN Information Section -->
+    <div class="bin-section">
+      <!-- Mobile BIN Examples -->
+      <div class="bin-examples-mobile">
+        <div class="bin-examples">
+          <div class="bin-item">
+            YT Premium BIN: <code>515462002115xxxx</code>
+          </div>
+          <div class="bin-item">
+            Canva Pro BIN: <code>Not Available RN</code>
+          </div>
+          <div class="bin-item">
+            Hotspot Shield BIN: <code>41546444006xxxxx</code>
+          </div>
+        </div>
+      </div>
+
+      <!-- Desktop BIN Cards -->
+      <div class="bin-cards-desktop">
+        <!-- YouTube Premium Card -->
+        <div class="bin-card">
+          <div class="bin-card-title">YouTube Premium BIN</div>
+          <div class="bin-detail"><strong>BIN:</strong> <code>515462002115xxxx</code></div>
+          <div class="bin-detail"><strong>Date:</strong> 01/27</div>
+          <div class="bin-detail"><strong>Street:</strong> IND,0062</div>
+          <div class="bin-detail"><strong>Postcode:</strong> 020101</div>
+          <div class="bin-detail"><strong>Province:</strong> Almaty</div>
+          <div class="bin-detail"><strong>City:</strong> Semipalatinsk</div>
+          <div class="bin-detail"><strong>Country:</strong> Kazakhstan</div>
+        </div>
+
+        <!-- Canva Pro Card -->
+        <div class="bin-card">
+          <div class="bin-card-title">Canva Pro BIN</div>
+          <div class="bin-detail"><strong>BIN:</strong> Not Available RN</div>
+          <div class="bin-detail"><strong>Date:</strong> 01/27</div>
+          <div class="bin-detail"><strong>Street:</strong> IND,0062</div>
+          <div class="bin-detail"><strong>Postcode:</strong> 020101</div>
+          <div class="bin-detail"><strong>Province:</strong> Almaty</div>
+          <div class="bin-detail"><strong>City:</strong> Semipalatinsk</div>
+          <div class="bin-detail"><strong>Country:</strong> Kazakhstan</div>
+        </div>
+
+        <!-- Hotspot Shield Card -->
+        <div class="bin-card">
+          <div class="bin-card-title">Hotspot Shield BIN</div>
+          <div class="bin-detail"><strong>BIN:</strong> <code>41546444006xxxxx</code></div>
+          <div class="bin-detail"><strong>Date:</strong> 10/27</div>
+          <div class="bin-detail"><strong>Street:</strong> - </div>
+          <div class="bin-detail"><strong>ZIP:</strong> 1000</div>
+          <div class="bin-detail"><strong>Province:</strong> - </div>
+          <div class="bin-detail"><strong>City:</strong> - </div>
+          <div class="bin-detail"><strong>Country:</strong> OWN</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CC Checker Button -->
+    <div class="cc-checker-container">
+      <a href="https://bbinl.github.io/cc-checker/" class="cc-checker-btn">CC Checker</a>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+      <!-- Input Section (Left Side) -->
+      <div class="input-section">
+        <div class="form-group">
+          <label for="bin">BIN:</label>
+          <input type="text" id="bin" class="bin-input" placeholder="51546200xxxxxxxx" value="" autocomplete="off">
+          <div class="bin-history" id="binHistory"></div>
+        </div>
+        
+        <div class="form-group">
+          <div class="form-row">
+            <div class="form-col">
+              <label for="month">Month</label>
+              <select id="month">
+                <option value="Random">Random</option>
+              </select>
+            </div>
+            <div class="form-col">
+              <label for="year">Year</label>
+              <select id="year">
+                <option value="Random">Random</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <!-- Updated CVC and Quantity layout -->
+        <div class="cvc-quantity-group">
+          <div class="cvc-quantity-item">
+            <label for="ccv">CVC</label>
+            <input type="number" id="ccv" placeholder="Random">
+          </div>
+          <div class="cvc-quantity-item">
+            <label for="quantity">Quantity</label>
+            <input type="number" id="quantity" value="15" min="1" max="1000">
+          </div>
+        </div>
+
+        <div class="button-container">
+          <button onclick="generateCards()">Generate Cards</button>
+          <button onclick="copyOutput()">Copy All Cards</button>
+        </div>
+      </div>
+
+      <!-- Output Section (Right Side) -->
+      <div class="output-section">
+        <div class="form-group">
+          <label for="output">Generated Cards:</label>
+          <textarea id="output" placeholder="Generated cards will appear here..."></textarea>
+        </div>
+      </div>
+    </div>
+
+    <!-- Page Footer -->
+    <footer class="page-footer">
+      Copyright 2025 All Rights Reserved <a href="https://t.me/bro_bin_lagbe"> ©Bro Bin Lagbe </a>
+    </footer>
+  </div>
+
+  <!-- Copy Notification -->
+  <div class="copy-notification" id="copyNotification">
+    Copied to clipboard!
+  </div>
+  <script>
+    // Load saved BINs from localStorage
+    let savedBins = JSON.parse(localStorage.getItem('binHistory')) || [];
+    const binInput = document.getElementById('bin');
+    const binHistory = document.getElementById('binHistory');
+
+    function showCopyNotification() {
+      const notification = document.getElementById("copyNotification");
+      notification.style.display = "block";
+      setTimeout(() => {
+        notification.style.display = "none";
+      }, 2000);
+    }
+
+    function copyOutput() {
+      let outputField = document.getElementById("output");
+      outputField.select();
+      document.execCommand("copy");
+      showCopyNotification();
+    }
+
+    // Save BIN to history (modified to keep most recent at bottom)
+    function saveBinToHistory(bin) {
+      if (!bin || bin.length < 6) return;
+      
+      // Remove if already exists
+      savedBins = savedBins.filter(b => b !== bin);
+      
+      // Add to end of array (will appear at bottom)
+      savedBins.push(bin);
+      
+      // Keep only last 5 entries
+      if (savedBins.length > 5) {
+        savedBins = savedBins.slice(-5);
+      }
+      
+      // Save to localStorage
+      localStorage.setItem('binHistory', JSON.stringify(savedBins));
+      
+      // Update dropdown
+      updateBinHistoryDropdown();
+    }
+
+    // Update the BIN history dropdown (modified to show bottom-to-top)
+    function updateBinHistoryDropdown() {
+      binHistory.innerHTML = '';
+      
+      if (savedBins.length === 0) return;
+      
+      // Display in order (oldest at top, newest at bottom)
+      savedBins.forEach(bin => {
+        const item = document.createElement('div');
+        item.className = 'bin-history-item';
+        item.textContent = bin;
+        item.addEventListener('mousedown', (e) => {
+          e.preventDefault();
+          binInput.value = bin;
+          binHistory.style.display = 'none';
+          binInput.focus();
+        });
+        binHistory.appendChild(item);
+      });
+    }
+
+    // Show suggestions when input is focused or cleared
+    binInput.addEventListener('focus', () => {
+      if (savedBins.length > 0) {
+        updateBinHistoryDropdown();
+        binHistory.style.display = 'block';
+      }
+    });
+
+    binInput.addEventListener('input', () => {
+      if (binInput.value === '' && savedBins.length > 0) {
+        updateBinHistoryDropdown();
+        binHistory.style.display = 'block';
+      }
+    });
+
+    binInput.addEventListener('blur', () => {
+      setTimeout(() => {
+        binHistory.style.display = 'none';
+      }, 200);
+    });
+
+    // Generate a random BIN with 80% chance for Visa/Mastercard
+    function getRandomBin() {
+      const rand = Math.random();
+      
+      // 60% chance for Visa, 30% for Mastercard, 10% for Amex
+      if (rand < 0.6) {
+        // Visa (starts with 4, 16 digits)
+        return '4' + Math.floor(10000 + Math.random() * 90000);
+      } else if (rand < 0.9) {
+        // Mastercard (starts with 51-55 or 2221-2720, 16 digits)
+        const prefix = Math.random() > 0.5 
+          ? Math.floor(51 + Math.random() * 5) // 51-55
+          : Math.floor(2221 + Math.random() * 500); // 2221-2720
+        return prefix.toString();
+      } else {
+        // Amex (starts with 34 or 37, 15 digits)
+        return Math.random() > 0.5 ? '34' : '37';
+      }
+    }
+
+    // Ensure the BIN is proper length for its type
+    function completeBin(bin) {
+      const cardLength = bin.startsWith('34') || bin.startsWith('37') ? 15 : 16;
+      while (bin.length < 6) { // Ensure at least 6 digits for BIN
+        bin += Math.floor(Math.random() * 10);
+      }
+      return bin;
+    }
+
+    // Generate cards
+    function generateCards() {
+      let bin = binInput.value.trim();
+      let quantity = parseInt(document.getElementById("quantity").value) || 10;
+      let ccv = document.getElementById("ccv").value;
+      let result = "";
+
+      // If no BIN provided, generate random card (mostly Visa/Mastercard)
+      if (!bin) {
+        bin = completeBin(getRandomBin());
+      }
+      
+      saveBinToHistory(bin);
+      
+      for (let i = 0; i < quantity; i++) {
+        let cardNumber = generateLuhnNumber(bin);
+        let ccvValue = ccv === "" ? Math.floor(100 + Math.random() * 900) : ccv;
+        let expiryMonth = document.getElementById("month").value === "Random" ? String(Math.floor(Math.random() * 12) + 1).padStart(2, '0') : document.getElementById("month").value;
+        let expiryYear = document.getElementById("year").value === "Random" ? String(Math.floor(Math.random() * 25) + 2025) : document.getElementById("year").value;
+
+        result += `${cardNumber}|${expiryMonth}|${expiryYear}|${ccvValue}\n`;
+      }
+
+      document.getElementById("output").value = result;
+    }
+
+    document.addEventListener("DOMContentLoaded", function () {
+      let monthDropdown = document.getElementById("month");
+      let yearDropdown = document.getElementById("year");
+
+      // Add months
+      for (let i = 1; i <= 12; i++) {
+        let option = document.createElement("option");
+        option.value = i.toString().padStart(2, '0');
+        option.textContent = i.toString().padStart(2, '0');
+        monthDropdown.appendChild(option);
+      }
+
+      // Add years
+      for (let i = 2025; i <= 2050; i++) {
+        let option = document.createElement("option");
+        option.value = i;
+        option.textContent = i;
+        yearDropdown.appendChild(option);
+      }
+      
+      // Add click to copy functionality for BIN examples
+      document.querySelectorAll('.bin-item code, .bin-detail code').forEach(code => {
+        code.addEventListener('click', function() {
+          navigator.clipboard.writeText(this.textContent)
+            .then(() => {
+              showCopyNotification();
+            })
+            .catch(err => {
+              console.error('Failed to copy: ', err);
+            });
+        });
+      });
+    });
+
+    function luhnCheck(num) {
+      let arr = (num + '')
+        .split('')
+        .reverse()
+        .map(x => parseInt(x));
+      let lastDigit = arr.splice(0, 1)[0];
+      let sum = arr.reduce((acc, val, i) => (i % 2 !== 0 ? acc + val : acc + ((val * 2) % 9) || 9), 0);
+      sum += lastDigit;
+      return sum % 10 === 0;
+    }
+
+    function generateLuhnNumber(bin) {
+      // Determine card length based on BIN
+      const isAmex = bin.startsWith('34') || bin.startsWith('37');
+      const cardLength = isAmex ? 15 : 16;
+      
+      let cardNumber = bin;
+      while (cardNumber.length < cardLength - 1) {
+        cardNumber += Math.floor(Math.random() * 10);
+      }
+
+      let checkDigit = 0;
+      while (true) {
+        let fullCardNumber = cardNumber + checkDigit;
+        if (luhnCheck(fullCardNumber)) {
+          return fullCardNumber;
+        }
+        checkDigit++;
+        if (checkDigit > 9) {
+          // If we can't find a valid check digit, regenerate the last digit
+          cardNumber = cardNumber.slice(0, -1) + Math.floor(Math.random() * 10);
+          checkDigit = 0;
+        }
+      }
+    }
+  </script>
+</body>
+</html>
