@@ -1,4 +1,4 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -68,6 +68,84 @@
       padding: 10px 20px;
       background-color: var(--light);
       border-bottom: 1px solid var(--border);
+    }
+
+    /* Mobile BIN Dropdown Cards */
+    .bin-dropdown-mobile {
+      display: none; /* Hidden by default, shown on mobile */
+      margin-top: 10px;
+    }
+
+    .bin-dropdown-card {
+      width: 100%;
+      font-family: Arial, sans-serif;
+      border-radius: 8px;
+      box-shadow: 0 2px 10px var(--shadow);
+      overflow: hidden;
+      margin-bottom: 10px;
+      background-color: var(--lighter);
+      border: 1px solid var(--border);
+    }
+    
+    .bin-dropdown-header {
+      background-color: #FF0000;
+      color: white;
+      padding: 12px 15px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      cursor: pointer;
+    }
+    
+    .bin-dropdown-title {
+      font-weight: bold;
+      font-size: 14px;
+    }
+    
+    .bin-dropdown-arrow {
+      transition: transform 0.3s ease;
+      font-size: 12px;
+    }
+    
+    .bin-dropdown-arrow.down {
+      transform: rotate(180deg);
+    }
+    
+    .bin-dropdown-details {
+      background-color: var(--lighter);
+      padding: 0;
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.3s ease, padding 0.3s ease;
+    }
+    
+    .bin-dropdown-details.show {
+      padding: 12px 15px;
+      max-height: 500px;
+    }
+    
+    .bin-dropdown-row {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 6px;
+      font-size: 13px;
+    }
+    
+    .bin-dropdown-label {
+      font-weight: bold;
+      color: var(--text-muted);
+      min-width: 80px;
+    }
+    
+    .bin-dropdown-value {
+      color: var(--text);
+      text-align: right;
+      font-family: monospace;
+    }
+    
+    .bin-dropdown-bin {
+      color: #FF0000;
+      font-weight: bold;
     }
 
     /* Mobile BIN Examples (hidden on desktop) */
@@ -365,6 +443,14 @@
       .bin-history {
         width: 90%; /* Slightly wider on mobile */
       }
+
+      /* Show mobile dropdown cards and hide examples */
+      .bin-dropdown-mobile {
+        display: block;
+      }
+      .bin-examples-mobile {
+        display: none;
+      }
     }
 
     @media (min-width: 769px) {
@@ -419,6 +505,123 @@
           </div>
           <div class="bin-item">
             Hotspot Shield BIN: <code>41546444006xxxxx</code>
+          </div>
+        </div>
+      </div>
+
+      <!-- Mobile BIN Dropdown Cards -->
+      <div class="bin-dropdown-mobile">
+        <!-- YouTube Premium Card -->
+        <div class="bin-dropdown-card">
+          <div class="bin-dropdown-header" onclick="toggleDropdown(this)">
+            <div class="bin-dropdown-title">YouTube Premium BIN</div>
+            <div class="bin-dropdown-arrow">▼</div>
+          </div>
+          <div class="bin-dropdown-details">
+            <div class="bin-dropdown-row">
+              <span class="bin-dropdown-label">BIN:</span>
+              <span class="bin-dropdown-value bin-dropdown-bin">515462002115xxxx</span>
+            </div>
+            <div class="bin-dropdown-row">
+              <span class="bin-dropdown-label">Date:</span>
+              <span class="bin-dropdown-value">01/27</span>
+            </div>
+            <div class="bin-dropdown-row">
+              <span class="bin-dropdown-label">Street:</span>
+              <span class="bin-dropdown-value">IND,0062</span>
+            </div>
+            <div class="bin-dropdown-row">
+              <span class="bin-dropdown-label">Postcode:</span>
+              <span class="bin-dropdown-value">020101</span>
+            </div>
+            <div class="bin-dropdown-row">
+              <span class="bin-dropdown-label">Province:</span>
+              <span class="bin-dropdown-value">Almaty</span>
+            </div>
+            <div class="bin-dropdown-row">
+              <span class="bin-dropdown-label">City:</span>
+              <span class="bin-dropdown-value">Semipalatinsk</span>
+            </div>
+            <div class="bin-dropdown-row">
+              <span class="bin-dropdown-label">Country:</span>
+              <span class="bin-dropdown-value">Kazakhstan</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Canva Pro Card -->
+        <div class="bin-dropdown-card">
+          <div class="bin-dropdown-header" onclick="toggleDropdown(this)">
+            <div class="bin-dropdown-title">Canva Pro BIN</div>
+            <div class="bin-dropdown-arrow">▼</div>
+          </div>
+          <div class="bin-dropdown-details">
+            <div class="bin-dropdown-row">
+              <span class="bin-dropdown-label">BIN:</span>
+              <span class="bin-dropdown-value">Not Available RN</span>
+            </div>
+            <div class="bin-dropdown-row">
+              <span class="bin-dropdown-label">Date:</span>
+              <span class="bin-dropdown-value">01/27</span>
+            </div>
+            <div class="bin-dropdown-row">
+              <span class="bin-dropdown-label">Street:</span>
+              <span class="bin-dropdown-value">IND,0062</span>
+            </div>
+            <div class="bin-dropdown-row">
+              <span class="bin-dropdown-label">Postcode:</span>
+              <span class="bin-dropdown-value">020101</span>
+            </div>
+            <div class="bin-dropdown-row">
+              <span class="bin-dropdown-label">Province:</span>
+              <span class="bin-dropdown-value">Almaty</span>
+            </div>
+            <div class="bin-dropdown-row">
+              <span class="bin-dropdown-label">City:</span>
+              <span class="bin-dropdown-value">Semipalatinsk</span>
+            </div>
+            <div class="bin-dropdown-row">
+              <span class="bin-dropdown-label">Country:</span>
+              <span class="bin-dropdown-value">Kazakhstan</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Hotspot Shield Card -->
+        <div class="bin-dropdown-card">
+          <div class="bin-dropdown-header" onclick="toggleDropdown(this)">
+            <div class="bin-dropdown-title">Hotspot Shield BIN</div>
+            <div class="bin-dropdown-arrow">▼</div>
+          </div>
+          <div class="bin-dropdown-details">
+            <div class="bin-dropdown-row">
+              <span class="bin-dropdown-label">BIN:</span>
+              <span class="bin-dropdown-value bin-dropdown-bin">41546444006xxxxx</span>
+            </div>
+            <div class="bin-dropdown-row">
+              <span class="bin-dropdown-label">Date:</span>
+              <span class="bin-dropdown-value">10/27</span>
+            </div>
+            <div class="bin-dropdown-row">
+              <span class="bin-dropdown-label">Street:</span>
+              <span class="bin-dropdown-value">-</span>
+            </div>
+            <div class="bin-dropdown-row">
+              <span class="bin-dropdown-label">ZIP:</span>
+              <span class="bin-dropdown-value">1000</span>
+            </div>
+            <div class="bin-dropdown-row">
+              <span class="bin-dropdown-label">Province:</span>
+              <span class="bin-dropdown-value">-</span>
+            </div>
+            <div class="bin-dropdown-row">
+              <span class="bin-dropdown-label">City:</span>
+              <span class="bin-dropdown-value">-</span>
+            </div>
+            <div class="bin-dropdown-row">
+              <span class="bin-dropdown-label">Country:</span>
+              <span class="bin-dropdown-value">OWN</span>
+            </div>
           </div>
         </div>
       </div>
@@ -550,6 +753,16 @@
       outputField.select();
       document.execCommand("copy");
       showCopyNotification();
+    }
+
+    // Toggle dropdown for mobile BIN cards
+    function toggleDropdown(header) {
+      const card = header.parentElement;
+      const details = card.querySelector('.bin-dropdown-details');
+      const arrow = card.querySelector('.bin-dropdown-arrow');
+      
+      details.classList.toggle('show');
+      arrow.classList.toggle('down');
     }
 
     // Save BIN to history (modified to keep most recent at bottom)
@@ -693,7 +906,7 @@
       }
       
       // Add click to copy functionality for BIN examples
-      document.querySelectorAll('.bin-item code, .bin-detail code').forEach(code => {
+      document.querySelectorAll('.bin-item code, .bin-detail code, .bin-dropdown-value').forEach(code => {
         code.addEventListener('click', function() {
           navigator.clipboard.writeText(this.textContent)
             .then(() => {
