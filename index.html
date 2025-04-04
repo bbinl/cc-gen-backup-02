@@ -733,7 +733,7 @@
   <!-- Copy Notification -->
   <div class="copy-notification" id="copyNotification">
     Copied to clipboard!
-  </div>
+  <c/div>
   <script>
     // Load saved BINs from localStorage
     let savedBins = JSON.parse(localStorage.getItem('binHistory')) || [];
@@ -765,7 +765,7 @@
       arrow.classList.toggle('down');
     }
 
-    // Save BIN to history (modified to keep most recent at bottom)
+    // Save BIN to history
     function saveBinToHistory(bin) {
       if (!bin || bin.length < 6) return;
       
@@ -787,7 +787,7 @@
       updateBinHistoryDropdown();
     }
 
-    // Update the BIN history dropdown (modified to show bottom-to-top)
+    // Update the BIN history dropdown
     function updateBinHistoryDropdown() {
       binHistory.innerHTML = '';
       
@@ -807,6 +807,14 @@
         binHistory.appendChild(item);
       });
     }
+
+    // Save BIN when user explicitly enters one
+    binInput.addEventListener('change', () => {
+      const bin = binInput.value.trim();
+      if (bin.length >= 6) {
+        saveBinToHistory(bin);
+      }
+    });
 
     // Show suggestions when input is focused or cleared
     binInput.addEventListener('focus', () => {
@@ -833,22 +841,21 @@
     function getRandomBin() {
       const rand = Math.random();
       
-      // 60% chance for Visa, 30% for Mastercard, 10% for Amex
       if (rand < 0.8) {
-    // Mastercard (80% chance, starts with 51-55, 16 digits)
-    const prefix = Math.floor(51 + Math.random() * 5); // 51 to 55
-    const body = Math.floor(100000000000000 + Math.random() * 900000000000000); // 14 digits
-    return prefix.toString() + body.toString();
-  } else if (rand < 0.95) {
-    // Visa (15% chance, starts with 4, 16 digits)
-    return '4' + Math.floor(1000000000000000 + Math.random() * 900000000000000).toString();
-  } else {
-    // Amex (5% chance, starts with 34 or 37, 15 digits)
-    const prefix = Math.random() > 0.5 ? '34' : '37';
-    const body = Math.floor(100000000000000 + Math.random() * 90000000000000); // 13 digits
-    return prefix + body.toString();
-  }
-}
+        // Mastercard (80% chance, starts with 51-55, 16 digits)
+        const prefix = Math.floor(51 + Math.random() * 5); // 51 to 55
+        const body = Math.floor(100000000000000 + Math.random() * 900000000000000); // 14 digits
+        return prefix.toString() + body.toString();
+      } else if (rand < 0.95) {
+        // Visa (15% chance, starts with 4, 16 digits)
+        return '4' + Math.floor(1000000000000000 + Math.random() * 900000000000000).toString();
+      } else {
+        // Amex (5% chance, starts with 34 or 37, 15 digits)
+        const prefix = Math.random() > 0.5 ? '34' : '37';
+        const body = Math.floor(100000000000000 + Math.random() * 90000000000000); // 13 digits
+        return prefix + body.toString();
+      }
+    }
 
     // Ensure the BIN is proper length for its type
     function completeBin(bin) {
@@ -871,7 +878,7 @@
         bin = completeBin(getRandomBin());
       }
       
-      saveBinToHistory(bin);
+      // Removed the saveBinToHistory(bin) call here
       
       for (let i = 0; i < quantity; i++) {
         let cardNumber = generateLuhnNumber(bin);
